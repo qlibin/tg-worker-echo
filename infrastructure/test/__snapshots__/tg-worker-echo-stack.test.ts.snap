@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TgWorkerEchoStack synthesizes expected CloudFormation template (snapshot) 1`] = `
+{
+  "Description": "Test stack",
+  "Outputs": {
+    "EchoWorkerFunctionArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "EchoWorkerFunction844848DF",
+          "Arn",
+        ],
+      },
+    },
+    "EchoWorkerFunctionName": {
+      "Value": {
+        "Ref": "EchoWorkerFunction844848DF",
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueautomationdevqueuesorderarnC96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/automation/dev/queues/order/arn",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueautomationdevqueuesresulturlC96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/automation/dev/queues/result/url",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueautomationdevrolesworkerarnC96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/automation/dev/roles/worker/arn",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "EchoWorkerFunction844848DF": {
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
+          "S3Key": "1ebc9d3ac2033816c4abb63e4afd69d350b4aba8704cc9236b82ea520b74f4b0.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "ENVIRONMENT": "dev",
+            "NODE_ENV": "production",
+            "RESULT_QUEUE_URL": {
+              "Ref": "SsmParameterValueautomationdevqueuesresulturlC96584B6F00A464EAD1953AFF4B05118Parameter",
+            },
+          },
+        },
+        "FunctionName": "tg-worker-echo-dev",
+        "Handler": "index.handler",
+        "LoggingConfig": {
+          "LogGroup": {
+            "Ref": "EchoWorkerLogGroupC9DE7975",
+          },
+        },
+        "MemorySize": 256,
+        "Role": {
+          "Ref": "SsmParameterValueautomationdevrolesworkerarnC96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "Runtime": "nodejs22.x",
+        "Timeout": 30,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "EchoWorkerFunctionSqsEventSourceTestStackOrderQueueC3E25FF334CD2B51": {
+      "Properties": {
+        "BatchSize": 5,
+        "EventSourceArn": {
+          "Ref": "SsmParameterValueautomationdevqueuesorderarnC96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "FilterCriteria": {
+          "Filters": [
+            {
+              "Pattern": "{"body":{"taskType":["echo"]}}",
+            },
+          ],
+        },
+        "FunctionName": {
+          "Ref": "EchoWorkerFunction844848DF",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+        "MaximumBatchingWindowInSeconds": 10,
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
+    },
+    "EchoWorkerLogGroupC9DE7975": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/tg-worker-echo-dev",
+        "RetentionInDays": 30,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

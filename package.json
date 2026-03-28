@@ -1,0 +1,40 @@
+{
+  "name": "tg-worker-echo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Canary/echo worker Lambda for end-to-end SQS architecture testing",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
+    "format": "prettier --write 'src/**' 'tests/**'",
+    "format:check": "prettier --check 'src/**' 'tests/**'",
+    "validate": "npm run build && npm run lint && npm run format:check && npm run type-check && npm run test",
+    "package:lambda": "npm run build && node scripts/bundle-lambda.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@qlibin/tg-assistant-contracts": "^2.0.0"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-sqs": "^3.750.0",
+    "@eslint/js": "^10.0.1",
+    "@types/aws-lambda": "^8.10.147",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.27.4",
+    "eslint": "^10.1.0",
+    "globals": "^17.4.0",
+    "jest": "^30.2.0",
+    "prettier": "^3.8.1",
+    "ts-jest": "^29.0.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.57.2"
+  }
+}

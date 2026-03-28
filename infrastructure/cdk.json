@@ -1,0 +1,38 @@
+{
+  "app": "node --loader ts-node/esm bin/tg-worker-echo.ts --profile aws-course",
+  "context": {
+    "environments": {
+      "dev": {
+        "account": "182399716679",
+        "region": "eu-central-1",
+        "envName": "dev",
+        "lambdaName": "tg-worker-echo-dev",
+        "tags": {
+          "app": "tg-worker-echo",
+          "env": "dev"
+        }
+      },
+      "test": {
+        "account": "182399716679",
+        "region": "eu-central-1",
+        "envName": "test",
+        "lambdaName": "tg-worker-echo-test",
+        "tags": {
+          "app": "tg-worker-echo",
+          "env": "test"
+        }
+      },
+      "prod": {
+        "account": "182399716679",
+        "region": "eu-central-1",
+        "envName": "prod",
+        "lambdaName": "tg-worker-echo",
+        "tags": {
+          "app": "tg-worker-echo",
+          "env": "prod"
+        }
+      }
+    },
+    "defaultEnvironment": "dev"
+  }
+}

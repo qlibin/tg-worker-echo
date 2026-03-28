@@ -1,0 +1,40 @@
+{
+  "name": "tg-worker-echo-infrastructure",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -w -p tsconfig.json",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint bin/ lib/ test/",
+    "lint:fix": "eslint bin/ lib/ test/ --fix",
+    "format": "prettier --write bin/ lib/ test/",
+    "format:check": "prettier --check bin/ lib/ test/",
+    "cdk": "cdk",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy",
+    "destroy": "cdk destroy",
+    "diff": "cdk diff",
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest --coverage",
+    "validate": "npm run build && npm run lint && npm run format:check && npm run type-check && npm run test"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "aws-cdk": "^2.1106.1",
+    "@eslint/js": "^10.0.0",
+    "eslint": "^10.0.0",
+    "globals": "^16.0.0",
+    "jest": "^30.2.0",
+    "prettier": "^3.8.1",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.2"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.244.0",
+    "constructs": "^10.5.1",
+    "source-map-support": "^0.5.21"
+  }
+}
