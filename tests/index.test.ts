@@ -297,4 +297,80 @@ describe('Echo Worker Handler', () => {
     ) as Record<string, unknown>;
     expect(sentBody.processingTime).toBeGreaterThanOrEqual(40);
   });
+
+  test('propagates chatId and text when both are present', async () => {
+    // Arrange
+    const order = makeValidOrderMessage({
+      chatId: 12345,
+      payload: { parameters: { text: 'hello' } },
+    });
+    const record = makeSqsRecord(JSON.stringify(order));
+    const event = makeSqsEvent([record]);
+
+    // Act
+    await handler(event, {} as never, () => {});
+
+    // Assert
+    const sentBody = JSON.parse(
+      ((mockSend.mock.calls as unknown[][])[0][0] as Record<string, unknown>).MessageBody as string
+    ) as Record<string, unknown>;
+    expect(sentBody.chatId).toBe(12345);
+    const resultData = (sentBody.result as Record<string, unknown>).data as Record<string, unknown>;
+    expect(resultData.text).toBe('hello');
+  });
+
+  test('omits chatId from result when order has no chatId', async () => {
+    // Arrange — no chatId field
+    const order = makeValidOrderMessage();
+    const record = makeSqsRecord(JSON.stringify(order));
+    const event = makeSqsEvent([record]);
+
+    // Act
+    const result = (await handler(event, {} as never, () => {})) as SQSBatchResponse;
+
+    // Assert
+    expect(result.batchItemFailures).toEqual([]);
+    const sentBody = JSON.parse(
+      ((mockSend.mock.calls as unknown[][])[0][0] as Record<string, unknown>).MessageBody as string
+    ) as Record<string, unknown>;
+    expect(sentBody.chatId).toBeUndefined();
+  });
+
+  test('sets text to undefined when parameters.text is a non-string', async () => {
+    // Arrange
+    const order = makeValidOrderMessage({
+      payload: { parameters: { text: 42 } },
+    });
+    const record = makeSqsRecord(JSON.stringify(order));
+    const event = makeSqsEvent([record]);
+
+    // Act
+    await handler(event, {} as never, () => {});
+
+    // Assert
+    const sentBody = JSON.parse(
+      ((mockSend.mock.calls as unknown[][])[0][0] as Record<string, unknown>).MessageBody as string
+    ) as Record<string, unknown>;
+    const resultData = (sentBody.result as Record<string, unknown>).data as Record<string, unknown>;
+    expect(resultData.text).toBeUndefined();
+  });
+
+  test('sets text to undefined when payload has no parameters', async () => {
+    // Arrange
+    const order = makeValidOrderMessage({
+      payload: {},
+    });
+    const record = makeSqsRecord(JSON.stringify(order));
+    const event = makeSqsEvent([record]);
+
+    // Act
+    await handler(event, {} as never, () => {});
+
+    // Assert
+    const sentBody = JSON.parse(
+      ((mockSend.mock.calls as unknown[][])[0][0] as Record<string, unknown>).MessageBody as string
+    ) as Record<string, unknown>;
+    const resultData = (sentBody.result as Record<string, unknown>).data as Record<string, unknown>;
+    expect(resultData.text).toBeUndefined();
+  });
 });
