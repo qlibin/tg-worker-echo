@@ -33,10 +33,15 @@ async function processRecord(record: SQSRecord): Promise<void> {
   const resultMessage: ResultMessage = {
     orderId: order.orderId,
     correlationId: order.correlationId ?? order.orderId,
+    chatId: order.chatId,
     taskType: order.taskType,
     status: 'success',
     result: {
       data: {
+        text:
+          typeof order.payload.parameters?.text === 'string'
+            ? order.payload.parameters.text
+            : undefined,
         echoedPayload: order.payload,
         workerVersion: WORKER_VERSION,
         processedAt: new Date().toISOString(),

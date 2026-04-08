@@ -20,7 +20,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@qlibin/tg-assistant-contracts": "^2.0.0"
+    "@qlibin/tg-assistant-contracts": "^2.1.0"
   },
   "devDependencies": {
     "@aws-sdk/client-sqs": "^3.750.0",

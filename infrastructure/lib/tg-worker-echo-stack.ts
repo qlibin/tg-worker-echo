@@ -83,7 +83,8 @@ export class TgWorkerEchoStack extends Stack {
         filters: [
           FilterCriteria.filter({
             body: {
-              taskType: FilterRule.isEqual('echo') as unknown,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- FilterRule.isEqual returns `any` per aws-cdk-lib type defs; safe here as FilterCriteria.filter also accepts `any`
+              taskType: FilterRule.isEqual('echo'),
             },
           }),
         ],
